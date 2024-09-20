@@ -1,0 +1,85 @@
+﻿@model IEnumerable<ContactAppFinal.Models.User>
+
+@{
+    ViewBag.Title = "Index";
+    bool IsAdmin = User.IsInRole("Admin");
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Password)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsAdmin)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.FName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Password)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsAdmin)
+        </td>
+        <td>
+            <input type="checkbox" class="status-checkbox" data-user-id="@item.Id" @(item.IsActive ? "checked" : "") />
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { userId = item.Id }) |
+            @Html.ActionLink("GetContacts", "GetContacts", "Contact", new { userId = item.Id }, null) |
+        </td>
+    </tr>
+}
+
+</table>
+
+<script>
+    $(document).ready(function () {
+        $('.status-checkbox').change(function () {
+            var checkbox = $(this);
+            var userId = checkbox.data('user-id');
+            var isActive = checkbox.is(':checked');
+
+            $.ajax({
+                url: '@Url.Action("EditStatus","User")',
+                type: 'POST',
+                data: {
+                    userId: userId,
+                    isActive: isActive
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert("User status updated Successfully")
+                    }
+                },
+                error: function () {
+                    alert("Error Occurred")
+                    checkbox.prop('checked', !isActive)
+                }
+            })
+        })
+    })
+</script>

@@ -1,0 +1,69 @@
+﻿@model ContactAppFinal.Models.Contact
+
+<div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "contactForm" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contactModalLabel">@Model.Id == 0 ? "Add Contact" : "Edit Contact"</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Html.HiddenFor(model => model.Id)
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.FName)
+                        @Html.TextBoxFor(model => model.FName, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.LName)
+                        @Html.TextBoxFor(model => model.LName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    // Handle form submission
+    $('#contactForm').submit(function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var url = '@Model.Id == 0 ? Url.Action("Create", "Contact") : Url.Action("Edit", "Contact")';
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: form.serialize(),
+            success: function (response) {
+                if (response.success) {
+                    alert('Contact saved successfully.');
+                    loadItems();
+                    closeModal();
+                } else {
+                    alert('Error: ' + response.message);
+                }
+            },
+            error: function (err) {
+                alert('An error occurred.');
+            }
+        });
+    });
+
+    function closeModal() {
+        $('#contactModal').modal('hide');
+        $('#modalContainer').empty();
+    }
+
+    // Show the modal when the partial view is loaded
+    $(document).ready(function () {
+        $('#contactModal').modal('show');
+    });
+</script>
