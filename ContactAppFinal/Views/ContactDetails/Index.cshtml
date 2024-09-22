@@ -1,0 +1,26 @@
+﻿@model IEnumerable<ContactAppFinal.Models.ContactDetails>
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="container" id="addNewRecordForm" style="display:none">
+    @Html.Partial("_AddRecordPartial")
+</div>
+<div class="container" id="contactDetailsList">
+    <h2>Contact Details</h2>
+    <p>
+        <input type="button" value="Add new Contact" id="btnAddDetails" class="btn btn-primary" />
+    </p>
+    <table id="grid">
+    </table>
+    <div id="pager"></div>
+</div>
+@*formatting and displaying JqGrid*@
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/redmond/jquery-ui.css">
+<script src="~/Scripts/MyGrid.js"></script>
+<script>
+    $("#btnAddDetails").click(function () {
+        $("#contactDetailsList").hide();
+        $("#addNewRecordForm").show();
+    })
+</script>

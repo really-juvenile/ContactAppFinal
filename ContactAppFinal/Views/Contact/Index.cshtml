@@ -1,12 +1,12 @@
-﻿@model IEnumerable<ContactAppFinal.Models.Contact>
-
+﻿
+@model IEnumerable<ContactAppFinal.Models.Contact>
 @{
-    ViewBag.Title = "GetContacts";
+    ViewBag.Title = "Index";
 }
 
-<h2>GetContacts</h2>
+<h2>Index</h2>
 
-<div id="Get Contacts">
+<div id="contact-list">
     <br />
     @if (User.IsInRole("Staff"))
     {
@@ -27,7 +27,7 @@
                     LName
                 </th>
                 <th>
-                    Is Active
+                    Current Status
                 </th>
                 <th></th>
                 <th></th>
@@ -38,13 +38,12 @@
         </tbody>
     </table>
 </div>
-
 <script src="~/Scripts/MyCrud.js">
 
 </script>
 
 <script>
     $(document).ready(function () {
-        loadContacts()
+        loadContacts();
     })
 </script>

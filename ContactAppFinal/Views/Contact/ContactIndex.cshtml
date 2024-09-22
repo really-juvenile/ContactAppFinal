@@ -6,7 +6,7 @@
 
 <h2>GetContacts</h2>
 
-<div id="Get Contacts">
+<div id="contactList">
     <br />
     @if (User.IsInRole("Staff"))
     {
@@ -39,6 +39,14 @@
     </table>
 </div>
 
+<div id="newRecord" style="display:none" class="container">
+    @Html.Partial("_addRecordPartial")
+</div>
+@*<div id="editRecord" style="display:none" class="container">
+        @Html.Partial("_editRecordPartial")
+    </div>*@
+
+
 <script src="~/Scripts/MyCrud.js">
 
 </script>
@@ -48,3 +56,5 @@
         loadContacts()
     })
 </script>
+
+

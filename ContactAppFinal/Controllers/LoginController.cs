@@ -25,11 +25,14 @@ namespace ContactAppFinal.Controllers
             {
                 var user = session.Query<User>().FirstOrDefault(u => u.FName == loginVM.Username); //circular ref
 
+
                 if (user != null && user.IsActive)
                 {
+
                     bool isPasswordValid = loginVM.Password == user.Password;
                     if (isPasswordValid)
                     {
+                        Session["userId"] = user.Id;
                         FormsAuthentication.SetAuthCookie(user.FName, false);
                         return RedirectToAction("Index", "User");
                     }

@@ -48,8 +48,9 @@
             <input type="checkbox" class="status-checkbox" data-user-id="@item.Id" @(item.IsActive ? "checked" : "") />
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { userId = item.Id }) |
-            @Html.ActionLink("GetContacts", "GetContacts", "Contact", new { userId = item.Id }, null) |
+            @Html.ActionLink("Edit", "Edit", new { userId = item.Id }) 
+           
+            @Html.ActionLink("GetContacts", "ContactIndex", "Contact", new { userId = item.Id }, null) 
         </td>
     </tr>
 }

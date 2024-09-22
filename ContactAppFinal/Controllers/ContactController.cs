@@ -1,77 +1,119 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Security.Policy;
 using System.Web.Mvc;
 using ContactAppFinal.Data;
 using ContactAppFinal.Models;
+using NHibernate.Linq;
 
 namespace ContactAppFinal.Controllers
 {
     [Authorize]
     public class ContactController : Controller
     {
-        // GET: Contact
-        public ActionResult GetContacts(int userId)
+
+        public ActionResult GetContacts()
+        {
+           
+
+            int userId = (int)Session["userId"];
+            using (var session = NHibernateHelper.CreateSession())
+            {
+                var contacts = session.Query<Contact>()
+                    .Where(c => c.User.Id == userId)
+                    .Select(c => new Contact
+                    {
+                        Id = c.Id,
+                        FName = c.FName,
+                        LName = c.LName,
+                        IsActive = c.IsActive,
+                    }).
+                    ToList();
+                return Json(contacts, JsonRequestBehavior.AllowGet);
+            }
+        }
+       
+
+        public ActionResult ContactIndex(int userId)
+        {
+            Session["userId"] = userId;
+            using (var session = NHibernateHelper.CreateSession())
+            {
+                //var contacts = session.Query<Contact>()
+                return View();
+            }
+
+        }
+
+        public ActionResult GetContact(int id)
+        {
+            using(var session = NHibernateHelper.CreateSession())
+            {
+
+                var contact = session.Query<Contact>().FirstOrDefault(c => c.Id == id);
+                return Json(contact, JsonRequestBehavior.AllowGet);
+            }
+        }
+        [HttpPost]
+        [Authorize(Roles = "Staff")]
+
+        public ActionResult Create(Contact contact)
+        {
+
+            using (var session = NHibernateHelper.CreateSession())
+            {
+                using (var txn = session.BeginTransaction())
+                {
+                    // Assuming you're using User.Identity.Name for the logged-in user
+                    //contact.User = session.Get<User>(int.Parse(User.Identity.Name));
+                    int userId = (int)Session["userId"];
+                    contact.User.Id = userId;
+                    session.Save(contact);
+                    txn.Commit();
+                    return Json(new { success = true });
+
+                }
+                
+            }
+        }
+        [HttpPost]
+        public ActionResult Edit(Contact contact)
         {
             using (var session = NHibernateHelper.CreateSession())
             {
-                var user = session.Get<User>(userId);
-                if (user == null)
+                using (var txn = session.BeginTransaction())
                 {
-                    return HttpNotFound();
+                    // Assuming you're using User.Identity.Name for the logged-in user
+                    //contact.User = session.Get<User>(int.Parse(User.Identity.Name));
+                    int userId = (int)Session["userId"];
+                    contact.User.Id = userId;
+                    session.Update(contact);
+                    txn.Commit();
+                    return Json(new { success = true });
+
                 }
 
-                var contacts = user.Contacts.Where(c => c.IsActive).ToList();
-
-                // Check role and permissions
-                bool isAdmin = User.IsInRole("Admin");
-                bool isCurrentUser = user.FName == User.Identity.Name;
-
-                if (!isAdmin && !isCurrentUser)
-                {
-                    return new HttpUnauthorizedResult();
-                }
-
-                ViewBag.IsAdmin = isAdmin;
-                ViewBag.UserId = userId;
-                return View(contacts);
             }
-        }
-
-        [HttpGet]
-        public ActionResult Create(int userId)
-        {
-            bool isAdmin = User.IsInRole("Admin");
-            if (isAdmin)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
-            var contact = new Contact { User = new User { Id = userId } };
-            return PartialView("_addRecordPartial", contact);
         }
 
         [HttpPost]
-        public ActionResult Create(Contact contact)
+        [Authorize(Roles = "Staff")]
+
+        public JsonResult EditContactStatus(int userId, bool isActive)
         {
-            bool isAdmin = User.IsInRole("Admin");
-            if (isAdmin)
-            {
-                return new HttpUnauthorizedResult();
-            }
-
             using (var session = NHibernateHelper.CreateSession())
-            using (var transaction = session.BeginTransaction())
             {
-                contact.IsActive = true;
-                contact.User = session.Load<User>(contact.User.Id);
-                session.Save(contact);
-                transaction.Commit();
+                var contact = session.Get<Contact>(userId);
+                using (var txn = session.BeginTransaction())
+                {
+                    contact.IsActive = isActive;
+                    session.Update(contact);
+                    txn.Commit();
+                    return Json(new { success = true });
+                }
             }
-
-            return Json(new { success = true });
         }
+       
 
     }
 }
