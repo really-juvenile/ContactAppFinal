@@ -431,6 +431,8 @@
     <Content Include="Views\Shared\_addRecordPartial.cshtml" />
     <Content Include="Views\Shared\_editRecordPartial.cshtml" />
     <Content Include="Views\ContactDetails\Index.cshtml" />
+    <Content Include="Views\ContactDetails\ShowDetails.cshtml" />
+    <Content Include="Views\ContactDetails\ContactDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

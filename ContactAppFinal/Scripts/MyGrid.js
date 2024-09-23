@@ -1,110 +1,90 @@
-﻿//$(document).ready(function () {
-//    $("#grid").jqGrid({
-//        url: "/ContactDetails/GetData",
-//        datatype: "json",
-//        colNames: ["Type", "Value"],
-//        colModel: [{ name: "Type" }, { name: "Value" }], /*hidden: true },*/
-//        //{ name: "Type", editable: true, searchoptions: { sopt: ['eq'] } },
-//        //{ name: "Value", editable: true },
+﻿$(document).ready(function () {
+    //var urlParams = new URLSearchParams(window.location.search);
+    //var contactId = urlParams.get('contactId'); // Extract the contactId
+    //// Debugging: Log the contactId to ensure it's being passed correctly
+    /*console.log("ContactId being passed to jqGrid: ", contactId);*/
 
-//        /*],*/
-//        height: "250",
-//        caption: "Contact Details",
-//        loadonce: true,
-//        jsonReader: {
-//            root: function (obj) { return obj; },
-//            repeatitems: false
-//        }
-//        //pager: "#pager",
-//        //rowNum: 5,
-//        //rowList: [5, 10, 15],
-//        //sortname: 'id',
-//        //sortorder: 'asc',
-//        //viewrecords: true,
-//        //width: 650,
+    /*if (contactId) {*/
+        $("#grid").jqGrid({
+            url: "/ContactDetails/GetData",
+            datatype: "json",
+            colNames: ["Id","Type","Value"],
+            colModel: [{ name: "Id", key: true, hidden: true },
+                { name: "Type", index: "Type", editable: true },
+                { name: "Value", index: "Value", editable: true }
+            ],
+            /*loadonce: true,*/
+            //jsonReader: {
+            //    root: function (obj) { return obj; },
+            //    repeatitems: false
+            //}
+            width: "500",
+            height: "250",
+            caption: "Contact Details Records",
+            pager: "#pager",
+            rowNum: 5,
+            rowList: [5, 10, 15],
+            sortname: 'Id',
+            sortorder: 'asc',
+            viewrecords: true,
 
-//        //gridComplete: function () {
-//        //    $("#grid").jqGrid('navGrid', '#pager', { edit: true, add: true, del: true, search: true, refresh: true },
-//        //        {
-//        //            //edit
-//        //            url: "/ContactDetails/Edit",
-//        //            closeAfterEdit: true,
-//        //            width: 600,
+            gridComplete: function () {
+                $("#grid").jqGrid('navGrid', '#pager', { edit: true, add: true, del: true, search: true },
+                    {
+                        url: "/ContactDetails/Edit",
+                        closeAfterEdit: true,
+                        width: 600,
 
-//        //            afterSubmit: function (response, postdata) {
-//        //                var result = JSON.parse(response.responseText);
-//        //                if (result.success) {
-//        //                    alert(result.message);
-//        //                    return [true];
-//        //                } else {
-//        //                    alert(result.message);
-//        //                    return [false];
-//        //                }
-//        //            }
-//        //        },
-//        //        {
+                        afterSubmit: function (response, postdata) {
+                            var result = JSON.parse(response.responseText);
+                            if (result.success) {
+                                alert(result.message);
+                                return [true];
+                            } else {
+                                alert(result.message);
+                                return [false];
+                            }
+                        }
+                    },
+                    {
+                        url: "/ContactDetails/Add",
+                        closeAfterAdd: true,
+                        width: 600,
 
-//        //            url: "/ContactDetails/Add",
-//        //            closeAfterAdd: true,
-//        //            width: 600,
+                        aftersubmit: function (response, postdata) {
+                            var result = JSON.parse(response.responseText);
+                            if (result.success) {
+                                alert(result.message);
+                                return [true];
+                            }
+                            else {
+                                alert(result.message);
+                                return [False];
+                            }
 
-//        //            aftersubmit: function (response, postdata) {
-//        //                var result = JSON.parse(response.responseText);
-//        //                if (result.success) {
-//        //                    alert(result.message);
-//        //                    return [true];
+                        }
+                    },
+                    {
+                        url: "/ContactDetails/Delete",
 
-//        //                }
-//        //                else {
-//        //                    alert(result.message);
-//        //                    return [false];
-//        //                }
-//        //            }
+                        aftersubmit: function (response, postdata) {
+                            var result = JSON.parse(response.responseText);
+                            if (result.success) {
+                                alert(result.message);
+                                return [true];
+                            } else {
+                                alert(result.message);
+                                return [false];
+                            }
+                        }
+                    },
+                    {
+                        multipleSearch: false,
+                        closeAfterSearch: true
+                    }
+                );
+            }
+        })
+    
+})
 
-
-//        //        },
-//        //        {
-//        //            url: "/ContactDetails/Delete",
-
-//        //            aftersubmit: function (response, postdata) {
-//        //                var result = JSON.parse(response.responseText);
-//        //                if (result.success) {
-//        //                    alert(result.message);
-//        //                    return [true];
-//        //                } else {
-//        //                    alert(result.message);
-//        //                    return [false];
-//        //                }
-//        //            }
-
-
-//        //        },
-//        //        {
-//        //            multipleSearch: false,
-//        //            closeAfterSearch: true
-//        //        }
-//        //    );
-
-
-//    //}
-//    })
-//})
-
-function loadContactDetails(contactId) {
-    $("#grid").jqGrid({
-        url: "/ContactDetails/GetData?contactId=" + contactId, // Pass contactId to the server
-        datatype: "json",
-        colNames: ["Type", "Value"],
-        colModel: [
-            { name: "Type" },
-            { name: "Value" }
-        ],
-        height: "250",
-        caption: "Contact Details",
-        loadonce: true,
-        jsonReader: {
-            root: function (obj) { return obj; },
-            repeatitems: false
-        }
-    }).trigger('reloadGrid'); // Refresh the grid after setting the new URL
-}

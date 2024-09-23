@@ -181,6 +181,7 @@ namespace ContactAppFinal.Controllers
 
         // POST: User/AjaxDelete/5
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public JsonResult EditStatus(int userId, bool IsActive)
         {
             try
@@ -192,6 +193,30 @@ namespace ContactAppFinal.Controllers
                     {
                         targetUser.IsActive = IsActive;
                         session.Update(targetUser);
+                        txn.Commit();
+                        return Json(new { success = true });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public JsonResult EditAdmin(int userId, bool IsAdmin)
+        {
+            try
+            {
+                using (var session = NHibernateHelper.CreateSession())
+                {
+                    var updatedUser = session.Query<User>().FirstOrDefault(u => u.Id == userId);
+                    using (var txn = session.BeginTransaction())
+                    {
+                        updatedUser.IsAdmin = IsAdmin;
+                        session.Update(updatedUser);
                         txn.Commit();
                         return Json(new { success = true });
                     }

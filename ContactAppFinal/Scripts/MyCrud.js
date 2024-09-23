@@ -18,11 +18,8 @@
                 <button onclick = "editNewRecord(${contact.Id})" value="Edit" class="btn btn-success">Edit</button>
                 </td>
                  <td>
-                    <button onclick="loadContactDetails(${contact.Id})" class="btn btn-info">Details</button>
-                </td>
-                <td>
-                <button onclick= "deleteRecord(${contact.Id})" value="Delete"  class = "btn btn-danger">Delete</button>
-                </td>
+                        <a href="/ContactDetails/Index?id=${contact.Id}" target="_blank" class="btn btn-info">Details</a>
+                    </td>
                 </tr>`
 
                 $("#tblBody").append(row)
@@ -46,20 +43,6 @@ $("#btnDetails").click(() => {
     $("#contactDetailsList").show(); //grid name
 })
 
-//function ContactDetails(newItem) {
-//    $.ajax({
-//        url: "/ContactDetails/Index",
-//        type: "GET",
-
-//        success: function (data) {
-//            //edit
-
-//            $.(each(data, function (i, contact) {
-
-//            }))
-//        }
-//    })
-//}
 
 function addNewRecord(newItem) {
     $.ajax({
@@ -110,7 +93,7 @@ $(document).ready(function () {
                 },
                 success: function (success) {
                     alert("Contact Status Updated Successfully")
-                    
+
                 },
                 error: function (err) {
                     alert("Error in deactivating contact")
@@ -126,38 +109,38 @@ $(document).ready(function () {
 
 })
 
-function loadContacts() {
-    $.ajax({
-        url: '/Contact/GetContacts',
-        type: 'GET',
-        success: function (data) {
-            $("#tblBody").empty();
+//function loadContacts() {
+//    $.ajax({
+//        url: '/Contact/GetContacts',
+//        type: 'GET',
+//        success: function (data) {
+//            $("#tblBody").empty();
 
-            $.each(data, function (i, contact) {
-                var row = `<tr>
-                <td>${contact.FName}</td>
-                <td>${contact.LName}</td>
-                <td>
-                    <input type="checkbox" class="checkbox" data-user-id="${contact.Id}" ${(contact.IsActive ? "checked" : "")} />
-                </td>
-                <td>
-                    <button onclick="editNewRecord(${contact.Id})" class="btn btn-success">Edit</button>
-                </td>
-                <td>
-                    <button onclick="loadContactDetails(${contact.Id})" class="btn btn-info">Details</button>
-                </td>
-                <td>
-                    <button onclick="deleteRecord(${contact.Id})" class="btn btn-danger">Delete</button>
-                </td>
-                </tr>`;
+//            $.each(data, function (i, contact) {
+//                var row = `<tr>
+//                <td>${contact.FName}</td>
+//                <td>${contact.LName}</td>
+//                <td>
+//                    <input type="checkbox" class="checkbox" data-user-id="${contact.Id}" ${(contact.IsActive ? "checked" : "")} />
+//                </td>
+//                <td>
+//                    <button onclick="editNewRecord(${contact.Id})" class="btn btn-success">Edit</button>
+//                </td>
+//                <td>
+//                    <button onclick="loadContactDetails(${contact.Id})" class="btn btn-info">Details</button>
+//                </td>
+//                <td>
+//                    <button onclick="deleteRecord(${contact.Id})" class="btn btn-danger">Delete</button>
+//                </td>
+//                </tr>`;
 
-                $("#tblBody").append(row);
-            });
-        },
-        error: function (err) {
-            $("#tblBody").empty();
-            alert("No data available");
-        }
-    });
-}
+//                $("#tblBody").append(row);
+//            });
+//        },
+//        error: function (err) {
+//            $("#tblBody").empty();
+//            alert("No data available");
+//        }
+//    });
+//}
 

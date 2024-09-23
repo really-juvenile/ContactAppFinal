@@ -1,0 +1,30 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Use the shared layout
+}
+
+<h2>Contact Details</h2>
+
+<!-- jqGrid container for displaying contact details -->
+<table id="grid"></table>
+<div id="pager"></div>
+
+<!-- Include Redmond theme CSS -->
+<link href="~/Content/themes/redmond/jquery-ui.css" rel="stylesheet" />
+<link href="~/Content/themes/redmond/ui.jqgrid.css" rel="stylesheet" />
+
+<!-- Include necessary scripts -->
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script src="~/Scripts/jquery.jqGrid.min.js"></script>
+<script src="~/Scripts/MyCrud.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Load the contact details in jqGrid
+        var urlParams = new URLSearchParams(window.location.search);
+        var contactId = urlParams.get('contactId'); // Get the contactId from the query string
+
+        if (contactId) {
+            loadContactDetails(contactId); // Load contact details using jqGrid
+        }
+    });
+</script>

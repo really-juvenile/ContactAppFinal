@@ -35,6 +35,13 @@
         </thead>
 
         <tbody id="tblBody">
+            <!-- Load jQuery and other required libraries -->
+            <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+            <script src="~/Scripts/jquery.jqGrid.min.js"></script>
+
+            <!-- Make sure MyCrud.js is loaded AFTER the other scripts -->
+            <script src="~/Scripts/MyCrud.js"></script>
+
         </tbody>
     </table>
 </div>
@@ -42,19 +49,30 @@
 <div id="newRecord" style="display:none" class="container">
     @Html.Partial("_addRecordPartial")
 </div>
-@*<div id="editRecord" style="display:none" class="container">
+<div id="editRecord" style="display:none" class="container">
         @Html.Partial("_editRecordPartial")
-    </div>*@
+    </div>
 
 
-<script src="~/Scripts/MyCrud.js">
 
-</script>
 
 <script>
     $(document).ready(function () {
         loadContacts()
     })
 </script>
+<body>
+    <table id="grid"></table>
+    <div id="pager"></div>
+    <!-- Load jQuery first -->
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+
+    <!-- Load jqGrid after jQuery -->
+    <script src="~/Scripts/jquery.jqGrid.min.js"></script>
+
+    <!-- Load custom scripts like MyCrud.js last -->
+    <script src="~/Scripts/MyCrud.js"></script>
+</body>
+
 
 

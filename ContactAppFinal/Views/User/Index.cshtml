@@ -42,15 +42,15 @@
             @Html.DisplayFor(modelItem => item.Password)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.IsAdmin)
+            <input type="checkbox" class="status-checkbox" id="isadmin" data-user-id="@item.Id" @(item.IsAdmin ? "checked" : "") />
         </td>
         <td>
-            <input type="checkbox" class="status-checkbox" data-user-id="@item.Id" @(item.IsActive ? "checked" : "") />
+            <input type="checkbox" class="status-checkbox" id="isactive" data-user-id="@item.Id" @(item.IsActive ? "checked" : "") />
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { userId = item.Id }) 
-           
-            @Html.ActionLink("GetContacts", "ContactIndex", "Contact", new { userId = item.Id }, null) 
+            @Html.ActionLink("Edit", "Edit", new { userId = item.Id })
+
+            @Html.ActionLink("GetContacts", "ContactIndex", "Contact", new { userId = item.Id }, null)
         </td>
     </tr>
 }
@@ -59,7 +59,7 @@
 
 <script>
     $(document).ready(function () {
-        $('.status-checkbox').change(function () {
+        $('#isactive').change(function () {
             var checkbox = $(this);
             var userId = checkbox.data('user-id');
             var isActive = checkbox.is(':checked');
@@ -79,6 +79,33 @@
                 error: function () {
                     alert("Error Occurred")
                     checkbox.prop('checked', !isActive)
+                }
+            })
+        })
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        $('#isadmin').change(function () {
+            var checkbox = $(this);
+            var userId = checkbox.data('user-id');
+            var isAdmin = checkbox.is(':checked');
+
+            $.ajax({
+                url: '@Url.Action("EditAdmin","User")',
+                type: 'POST',
+                data: {
+                    userId: userId,
+                    isAdmin: isAdmin
+                },
+                success: function (response) {
+                    if (response.success) {
+                        alert("User status updated Successfully")
+                    }
+                },
+                error: function () {
+                    alert("Error Occurred")
+                    checkbox.prop('checked', !isAdmin)
                 }
             })
         })
