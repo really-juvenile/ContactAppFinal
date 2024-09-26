@@ -8,7 +8,7 @@ using NHibernate.Linq;
 
 namespace ContactAppFinal.Controllers
 {
-    [Authorize]
+    
     public class ContactController : Controller
     {
 
@@ -77,7 +77,9 @@ namespace ContactAppFinal.Controllers
             }
         }
         [HttpPost]
-        public ActionResult Edit(Contact contact)
+        [Authorize(Roles = "Staff")]
+
+        public ActionResult EditContact(Contact contact)
         {
             using (var session = NHibernateHelper.CreateSession())
             {
@@ -93,6 +95,24 @@ namespace ContactAppFinal.Controllers
 
                 }
 
+            }
+        }
+        [HttpGet]
+        [Authorize(Roles = "Staff")]
+
+        public ActionResult Edit(int id)
+        {
+            using (var session = NHibernateHelper.CreateSession())
+            {
+                // Retrieve the contact by ID
+                var contact = session.Get<Contact>(id);
+                if (contact == null)
+                {
+                    return HttpNotFound();
+                }
+
+                // Return the contact to the view for editing
+                return View(contact);
             }
         }
 
@@ -113,7 +133,36 @@ namespace ContactAppFinal.Controllers
                 }
             }
         }
-       
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Staff")]
+
+        public ActionResult Edit(Contact contact)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var session = NHibernateHelper.CreateSession())
+                using (var transaction = session.BeginTransaction())
+                {
+                    var existingContact = session.Get<Contact>(contact.Id);
+                    if (existingContact == null)
+                    {
+                        return HttpNotFound();
+                    }
+
+                    existingContact.FName = contact.FName;
+                    existingContact.LName = contact.LName;
+
+                    session.Update(existingContact);
+                    transaction.Commit();
+
+                    return RedirectToAction("ContactIndex", new { userId = existingContact.User.Id });
+                }
+            }
+
+            return View(contact);
+        }
+
 
     }
 }

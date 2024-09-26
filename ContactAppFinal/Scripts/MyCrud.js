@@ -10,12 +10,14 @@
                 var row = `<tr>
                 <td>${contact.FName}</td>
                 <td>${contact.LName}</td>
+             
                 <td>
-            <input type="checkbox" class="checkbox" data-user-id="${contact.Id}" ${(contact.IsActive ? "checked" : "")} />
-        </td>
+                <input type="checkbox" class="checkbox" data-user-id="${contact.Id}" ${(contact.IsActive ? "checked" : "")} />
+                </td>
+                
                 
                 <td>
-                <button onclick = "editNewRecord(${contact.Id})" value="Edit" class="btn btn-success">Edit</button>
+                <a href="/Contact/Edit/${contact.Id}" class="btn btn-success">Edit</button>
                 </td>
                  <td>
                         <a href="/ContactDetails/Index?id=${contact.Id}" target="_blank" class="btn btn-info">Details</a>

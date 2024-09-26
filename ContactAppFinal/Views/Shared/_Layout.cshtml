@@ -27,11 +27,12 @@
                 
                 
                 @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-                @*@if (User.IsInRole("Admin"))
-                    {
-                        @Html.ActionLink("GetAllUsers", "GetAllUsers", "User", null, new { @class = "action-link-margin" })
-                        @Html.ActionLink("GetAdmins", "GetAdmins", "User", null, new { @class = "action-link-margin" })
-                    }*@
+              
+
+                        @Html.ActionLink("GetUsers", "GetUsers", "User", null, new { @class = "action-link-margin" })
+
+
+                   
                 @if (User.Identity.IsAuthenticated)
                 {
                     <span style="color:white">Welcome @User.Identity.Name</span>

@@ -8,7 +8,7 @@ using ContactAppFinal.Models;
 
 namespace ContactAppFinal.Controllers
 {
-    [Authorize]
+    
     public class ContactDetailsController : Controller
     {
         // GET: ContactDetails
